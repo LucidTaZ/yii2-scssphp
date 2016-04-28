@@ -1,0 +1,18 @@
+{
+    "name": "lucidtaz/yii2-scssphp",
+    "description": "Yii2 bindings for leafo/scssphp",
+    "type": "library",
+    "require": {
+        "yiisoft/yii2": "^2.0",
+        "leafo/scssphp": "^0.6.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.3"
+    },
+    "authors": [
+        {
+            "name": "Thijs Zumbrink",
+            "email": "thijs@schalpoen.nl"
+        }
+    ]
+}
