@@ -7,31 +7,46 @@ use PHPUnit_Framework_TestCase;
 
 class FsStorageTest extends PHPUnit_Framework_TestCase
 {
+    private $scratchFilename;
+
+    public function setUp()
+    {
+        $this->scratchFilename = tempnam(sys_get_temp_dir(), 'lucidtaz_');
+    }
+
+    public function tearDown()
+    {
+        if (file_exists($this->scratchFilename)) {
+            unlink($this->scratchFilename);
+        }
+        $this->scratchFilename = null;
+    }
+
     public function testExists()
     {
         $storage = new FsStorage;
-        $filename = tempnam(sys_get_temp_dir(), 'lucidtaz_');
-        $this->assertTrue($storage->exists($filename));
-        unlink($filename);
+
+        $this->assertTrue($storage->exists($this->scratchFilename));
+        $this->assertFalse($storage->exists(sys_get_temp_dir() . 'lucidtaz_non_existing'));
     }
 
     public function testGet()
     {
         $storage = new FsStorage;
-        $filename = tempnam(sys_get_temp_dir(), 'lucidtaz_');
-        file_put_contents($filename, 'contents');
-        $this->assertEquals('contents', $storage->get($filename));
-        unlink($filename);
+
+        file_put_contents($this->scratchFilename, 'contents');
+        $this->assertEquals('contents', $storage->get($this->scratchFilename));
     }
 
     public function testPut()
     {
         $storage = new FsStorage;
-        $filename = tempnam(sys_get_temp_dir(), 'lucidtaz_');
-        $success = $storage->put($filename, 'contents');
+
+        $success = $storage->put($this->scratchFilename, 'contents');
         $this->assertTrue($success);
-        $contents = file_get_contents($filename);
+        $this->assertFileExists($this->scratchFilename);
+
+        $contents = file_get_contents($this->scratchFilename);
         $this->assertEquals('contents', $contents);
-        unlink($filename);
     }
 }
