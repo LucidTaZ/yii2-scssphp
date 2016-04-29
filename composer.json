@@ -2,6 +2,9 @@
     "name": "lucidtaz/yii2-scssphp",
     "description": "Yii2 bindings for leafo/scssphp",
     "type": "library",
+    "license": [
+        "MIT"
+    ],
     "require": {
         "php": ">=7.0.0",
         "yiisoft/yii2": "^2.0",
