@@ -59,7 +59,7 @@ class ScssAssetConverterTest extends PHPUnit_Framework_TestCase
     public function testConvertActuallyWorks()
     {
         $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
-        $result = $assetConverter->convert('asset.scss', 'base/path');
+        $assetConverter->convert('asset.scss', 'base/path');
         $generatedCss = $this->storage->get('base/path/asset.css');
         $this->assertEquals("#blop {\n  color: black; }\n", $generatedCss);
     }
