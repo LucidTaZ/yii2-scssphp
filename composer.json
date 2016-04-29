@@ -3,6 +3,7 @@
     "description": "Yii2 bindings for leafo/scssphp",
     "type": "library",
     "require": {
+        "php": ">=7.0.0",
         "yiisoft/yii2": "^2.0",
         "leafo/scssphp": "^0.6.3"
     },
