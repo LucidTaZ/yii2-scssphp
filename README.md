@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/LucidTaZ/yii2-scssphp.svg?branch=master)](https://travis-ci.org/LucidTaZ/yii2-scssphp)
+
 Yii2 bindings for SCSS-PHP
 ==========================
 
