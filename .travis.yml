@@ -4,4 +4,6 @@ php:
   - hhvm
   - nightly
 
-install: composer install
+install:
+  - composer global require "fxp/composer-asset-plugin:~1.1.1"
+  - composer install
