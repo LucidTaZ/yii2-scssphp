@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/LucidTaZ/yii2-scssphp.svg?branch=master)](https://travis-ci.org/LucidTaZ/yii2-scssphp)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/LucidTaZ/yii2-scssphp/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/LucidTaZ/yii2-scssphp/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/LucidTaZ/yii2-scssphp/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/LucidTaZ/yii2-scssphp/?branch=master)
 
 Yii2 bindings for SCSS-PHP
 ==========================
