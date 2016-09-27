@@ -24,5 +24,11 @@
             "name": "Thijs Zumbrink",
             "email": "thijs@schalpoen.nl"
         }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
     ]
 }
