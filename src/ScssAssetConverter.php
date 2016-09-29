@@ -59,10 +59,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
             return $asset;
         }
 
-        if ($this->shouldConvert($inFile, $outFile)) {
-            $css = $this->compiler->compile($this->storage->get($inFile), $inFile);
-            $this->storage->put($outFile, $css);
-        }
+        $this->convertAndSaveIfNeeded($inFile, $outFile);
 
         return $cssAsset;
     }
@@ -76,6 +73,14 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
     {
         $extensionlessFilename = pathinfo($filename, PATHINFO_FILENAME);
         return "$extensionlessFilename.$newExtension";
+    }
+
+    private function convertAndSaveIfNeeded(string $inFile, string $outFile)
+    {
+        if ($this->shouldConvert($inFile, $outFile)) {
+            $css = $this->compiler->compile($this->storage->get($inFile), $inFile);
+            $this->storage->put($outFile, $css);
+        }
     }
 
     private function shouldConvert(string $inFile, string $outFile): bool
