@@ -5,6 +5,7 @@ namespace lucidtaz\yii2scssphp;
 use Leafo\ScssPhp\Compiler;
 use lucidtaz\yii2scssphp\storage\FsStorage;
 use lucidtaz\yii2scssphp\storage\Storage;
+use RuntimeException;
 use Yii;
 use yii\base\Component;
 use yii\web\AssetConverterInterface;
@@ -16,6 +17,15 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
      */
     public $storage;
 
+    /**
+     * @var boolean whether the source asset file should be converted even if
+     * its result already exists. You may want to set this to be `true` during
+     * the development stage to make sure the converted assets are always up-to-
+     * date. Do not set this to true on production servers as it will
+     * significantly degrade the performance.
+     */
+    public $forceConvert = false;
+
     private $compiler;
 
     public function init()
@@ -24,7 +34,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         if (!isset($this->storage)) {
             $this->storage = new FsStorage;
         }
-        $this->compiler = new Compiler;
+        $this->compiler = Yii::createObject(Compiler::class);
     }
 
     /**
@@ -49,8 +59,10 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
             return $asset;
         }
 
-        $css = $this->compiler->compile($this->storage->get($inFile), $inFile);
-        $this->storage->put($outFile, $css);
+        if ($this->shouldConvert($inFile, $outFile)) {
+            $css = $this->compiler->compile($this->storage->get($inFile), $inFile);
+            $this->storage->put($outFile, $css);
+        }
 
         return $cssAsset;
     }
@@ -64,5 +76,26 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
     {
         $extensionlessFilename = pathinfo($filename, PATHINFO_FILENAME);
         return "$extensionlessFilename.$newExtension";
+    }
+
+    private function shouldConvert(string $inFile, string $outFile): bool
+    {
+        if (!$this->storage->exists($outFile)) {
+            return true;
+        }
+        if ($this->forceConvert) {
+            return true;
+        }
+        try {
+            return $this->isOlder($outFile, $inFile);
+        } catch (RuntimeException $e) {
+            Yii::warning('Encountered RuntimeException message "' . $e->getMessage() . '", going to convert.', __METHOD__);
+            return true;
+        }
+    }
+
+    private function isOlder(string $fileA, string $fileB): bool
+    {
+        return $this->storage->getMtime($fileA) < $this->storage->getMtime($fileB);
     }
 }
