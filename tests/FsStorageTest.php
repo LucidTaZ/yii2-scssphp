@@ -27,7 +27,7 @@ class FsStorageTest extends PHPUnit_Framework_TestCase
         $storage = new FsStorage;
 
         $this->assertTrue($storage->exists($this->scratchFilename));
-        $this->assertFalse($storage->exists(sys_get_temp_dir() . 'lucidtaz_non_existing'));
+        $this->assertFalse($storage->exists(sys_get_temp_dir() . '/lucidtaz_non_existing'));
     }
 
     public function testGet()
@@ -48,5 +48,37 @@ class FsStorageTest extends PHPUnit_Framework_TestCase
 
         $contents = file_get_contents($this->scratchFilename);
         $this->assertEquals('contents', $contents);
+    }
+
+    public function testTouch()
+    {
+        $storage = new FsStorage;
+
+        $mtime = time();
+        $success = $storage->touch($this->scratchFilename, $mtime);
+
+        $this->assertTrue($success);
+        $this->assertEquals($mtime, filemtime($this->scratchFilename));
+    }
+
+    public function testGetMtime()
+    {
+        $storage = new FsStorage;
+
+        $mtime = '123';
+        $success = touch($this->scratchFilename, $mtime);
+        $this->assertTrue($success, 'Test precondition');
+
+        $actual = $storage->getMtime($this->scratchFilename);
+
+        $this->assertEquals($mtime, $actual);
+    }
+
+    public function testGetMtimeException()
+    {
+        $storage = new FsStorage;
+
+        $this->setExpectedExceptionRegExp(\RuntimeException::class);
+        $storage->getMtime(sys_get_temp_dir() . '/lucidtaz_non_existing');
     }
 }
