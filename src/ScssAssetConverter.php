@@ -53,6 +53,8 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
 
         $inFile = "$basePath/$asset";
         $outFile = "$basePath/$cssAsset";
+        
+        $this->compiler->setImportPaths(dirname($inFile));
 
         if (!$this->storage->exists($inFile)) {
             Yii::error("Input file $inFile not found.", __METHOD__);
