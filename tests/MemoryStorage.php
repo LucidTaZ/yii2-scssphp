@@ -24,6 +24,15 @@ class MemoryStorage implements \lucidtaz\yii2scssphp\storage\Storage
         return true;
     }
 
+    public function remove(string $filename): bool
+    {
+        if (!$this->exists($filename)) {
+            return false;
+        }
+        unset($this->data[$filename]);
+        return true;
+    }
+
     public function touch(string $filename, int $mtime): bool
     {
         $this->mtimes[$filename] = $mtime;

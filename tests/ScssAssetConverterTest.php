@@ -70,12 +70,46 @@ class ScssAssetConverterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("#blop {\n  color: black; }\n", $generatedCss);
     }
 
+    /**
+     * @todo Implement
+     * @incomplete
+     */
+    public function testConvertHandlesImport()
+    {
+        // Unfortunately we cannot currently test this using the mocked
+        // filesystem, since leafo/scss directly accesses the filesystem. If we
+        // want to mock it away, we should extend the compiler and override all
+        // filesystem access, but it's not trivial.
+        // For now we actually test directly on the filesystem, in the
+        // tests/files/ directory.
+
+        $baseDir = __DIR__ . '/files';
+        $sourceFilename = 'import_base.scss';
+        $targetFilename = 'import_base.css';
+        $targetFile = "$baseDir/$targetFilename";
+
+        $storage = new FsStorage();
+        if ($storage->exists($targetFile)) {
+            $storage->remove($targetFile);
+        }
+
+        $assetConverter = new ScssAssetConverter(['storage' => $storage]);
+        $assetConverter->convert($sourceFilename, $baseDir);
+        $generatedCss = $storage->get($targetFile);
+        $this->assertEquals("#blop {\n  color: blue; }\n\n#bla {\n  color: red; }\n", $generatedCss);
+
+        // Cleanup generated file
+        $storage->remove($targetFile);
+    }
+
     public function testConvertSkipsUpToDateResults()
     {
         // This test could also be written by inspecting before and after file contents, to see the file was not overwritten
         $compiler = $this->prophesize(Compiler::class);
         $compiler->compile()
             ->shouldNotBeCalled();
+        $compiler->setImportPaths(Argument::type('string'))
+            ->willReturn();
         // NOTE: We should even test that the inFile contents are never read from storage
 
         $this->storage->touch('base/path/already_converted.scss', 5);
@@ -99,6 +133,8 @@ class ScssAssetConverterTest extends PHPUnit_Framework_TestCase
         $compiler->compile(Argument::cetera())
             ->shouldBeCalled()
             ->willReturn('dummy result');
+        $compiler->setImportPaths(Argument::type('string'))
+            ->willReturn();
 
         $this->storage->touch('base/path/already_converted.scss', 5);
         $this->storage->touch('base/path/already_converted.css', 4); // Older
@@ -123,6 +159,8 @@ class ScssAssetConverterTest extends PHPUnit_Framework_TestCase
         $compiler->compile(Argument::cetera())
             ->shouldBeCalled()
             ->willReturn('dummy result');
+        $compiler->setImportPaths(Argument::type('string'))
+            ->willReturn();
 
         $this->storage->touch('base/path/already_converted.scss', 5);
         $this->storage->touch('base/path/already_converted.css', 4); // Older
@@ -148,6 +186,8 @@ class ScssAssetConverterTest extends PHPUnit_Framework_TestCase
         $compiler->compile(Argument::cetera())
             ->shouldBeCalled()
             ->willReturn('dummy result');
+        $compiler->setImportPaths(Argument::type('string'))
+            ->willReturn();
 
         $this->storage->touch('base/path/already_converted.scss', 5);
         $this->storage->touch('base/path/already_converted.css', 4); // Older

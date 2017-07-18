@@ -50,6 +50,22 @@ class FsStorageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('contents', $contents);
     }
 
+    public function testRemove()
+    {
+        $storage = new FsStorage;
+
+        $storage->put($this->scratchFilename, 'contents');
+        $this->assertFileExists($this->scratchFilename, 'Test preparation');
+
+        $success = $storage->remove($this->scratchFilename);
+        $this->assertTrue($success);
+
+        $this->assertFileNotExists($this->scratchFilename);
+
+        $secondCallSuccess = $storage->remove($this->scratchFilename);
+        $this->assertFalse($secondCallSuccess);
+    }
+
     public function testTouch()
     {
         $storage = new FsStorage;

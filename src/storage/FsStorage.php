@@ -21,6 +21,11 @@ class FsStorage implements Storage
         return file_put_contents($filename, $contents) !== false;
     }
 
+    public function remove(string $filename): bool
+    {
+        return @unlink($filename);
+    }
+
     public function touch(string $filename, int $mtime): bool
     {
         return touch($filename, $mtime);

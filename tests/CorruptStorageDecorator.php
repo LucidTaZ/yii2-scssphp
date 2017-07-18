@@ -27,6 +27,11 @@ class CorruptStorageDecorator implements Storage
     /**
      * @var bool Set to true to throw a RuntimeException on every call
      */
+    public $corruptRemove = false;
+
+    /**
+     * @var bool Set to true to throw a RuntimeException on every call
+     */
     public $corruptTouch = false;
 
     /**
@@ -66,6 +71,14 @@ class CorruptStorageDecorator implements Storage
             $this->doThrow();
         }
         return $this->storage->put($filename, $contents);
+    }
+
+    public function remove(string $filename): bool
+    {
+        if ($this->corruptRemove) {
+            $this->doThrow();
+        }
+        return $this->storage->remove($filename);
     }
 
     public function touch(string $filename, int $mtime): bool
