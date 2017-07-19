@@ -34,7 +34,7 @@
     ],
     "scripts": {
         "test": "@php vendor/bin/phpunit",
-        "stan": "@php vendor/bin/phpstan analyse src tests --level=1 --autoload-file=vendor/yiisoft/yii2/Yii.php",
+        "stan": "@php vendor/bin/phpstan analyse src tests --level=7 --configuration=phpstan.neon --autoload-file=vendor/yiisoft/yii2/Yii.php",
         "ci": [
             "@test",
             "@stan"
