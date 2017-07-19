@@ -50,3 +50,11 @@ class AppAsset extends AssetBundle
     ];
 }
 ```
+
+CONTRIBUTING
+------------
+
+When contributing code, please make sure the tests keep passing. Additionally
+the code is checked by phpstan to detect any statically analyzable issues.
+
+To run these checks, simply execute `composer ci`.

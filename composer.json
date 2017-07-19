@@ -11,7 +11,8 @@
         "leafo/scssphp": "^0.6.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.3"
+        "phpunit/phpunit": "^5.3",
+        "phpstan/phpstan": "^0.7.0"
     },
     "autoload": {
         "psr-4": { "lucidtaz\\yii2scssphp\\": "src/" }
@@ -30,5 +31,13 @@
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
-    ]
+    ],
+    "scripts": {
+        "test": "@php vendor/bin/phpunit",
+        "stan": "@php vendor/bin/phpstan analyse src tests --level=1 --autoload-file=vendor/yiisoft/yii2/Yii.php",
+        "ci": [
+            "@test",
+            "@stan"
+        ]
+    }
 }
