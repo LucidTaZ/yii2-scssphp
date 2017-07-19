@@ -3,9 +3,10 @@
 namespace lucidtaz\yii2scssphp\tests;
 
 use lucidtaz\yii2scssphp\storage\FsStorage;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
-class FsStorageTest extends PHPUnit_Framework_TestCase
+class FsStorageTest extends TestCase
 {
     private $scratchFilename;
 
@@ -94,7 +95,7 @@ class FsStorageTest extends PHPUnit_Framework_TestCase
     {
         $storage = new FsStorage;
 
-        $this->setExpectedExceptionRegExp(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $storage->getMtime(sys_get_temp_dir() . '/lucidtaz_non_existing');
     }
 }

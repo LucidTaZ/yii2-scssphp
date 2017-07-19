@@ -5,11 +5,11 @@ namespace lucidtaz\yii2scssphp\tests;
 use Leafo\ScssPhp\Compiler;
 use lucidtaz\yii2scssphp\ScssAssetConverter;
 use lucidtaz\yii2scssphp\storage\FsStorage;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Yii;
 
-class ScssAssetConverterTest extends PHPUnit_Framework_TestCase
+class ScssAssetConverterTest extends TestCase
 {
     private $storage;
 
