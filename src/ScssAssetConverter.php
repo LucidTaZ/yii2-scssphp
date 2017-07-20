@@ -25,8 +25,22 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
      * significantly degrade the performance.
      */
     public $forceConvert = false;
+    
+    public $formatter = null;
+    
+    protected $scssPhpFormatterMap =
+    [
+        'compact'       => '\Leafo\ScssPhp\Formatter\Compact',
+        'compressed'    => '\Leafo\ScssPhp\Formatter\Compressed',
+        'crunched'      => '\Leafo\ScssPhp\Formatter\Crunched',
+        'debug'         => '\Leafo\ScssPhp\Formatter\Debug',
+        'expanded'      => '\Leafo\ScssPhp\Formatter\Expanded',
+        'nested'        => '\Leafo\ScssPhp\Formatter\Nested',
+    ];
 
-    private $compiler;
+    protected $defaultFormatter = 'nested';
+
+    protected $compiler;
 
     public function init()
     {
@@ -35,6 +49,8 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
             $this->storage = new FsStorage;
         }
         $this->compiler = Yii::createObject(Compiler::class);
+        
+        $this->compiler->setFormatter($this->getScssPhpFormatterClass($this->formatter));
     }
 
     /**
@@ -66,18 +82,18 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         return $cssAsset;
     }
 
-    private function getExtension(string $filename): string
+    protected function getExtension(string $filename): string
     {
         return pathinfo($filename, PATHINFO_EXTENSION);
     }
 
-    private function replaceExtension(string $filename, string $newExtension): string
+    protected function replaceExtension(string $filename, string $newExtension): string
     {
         $extensionlessFilename = pathinfo($filename, PATHINFO_FILENAME);
         return "$extensionlessFilename.$newExtension";
     }
 
-    private function convertAndSaveIfNeeded(string $inFile, string $outFile)
+    protected function convertAndSaveIfNeeded(string $inFile, string $outFile)
     {
         if ($this->shouldConvert($inFile, $outFile)) {
             $css = $this->compiler->compile($this->storage->get($inFile), $inFile);
@@ -85,7 +101,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         }
     }
 
-    private function shouldConvert(string $inFile, string $outFile): bool
+    protected function shouldConvert(string $inFile, string $outFile): bool
     {
         if (!$this->storage->exists($outFile)) {
             return true;
@@ -101,8 +117,21 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         }
     }
 
-    private function isOlder(string $fileA, string $fileB): bool
+    protected function isOlder(string $fileA, string $fileB): bool
     {
         return $this->storage->getMtime($fileA) < $this->storage->getMtime($fileB);
+    }
+    
+    protected function getScssPhpFormatterClass($formatter): string
+    {
+        if (!isset($this->scssPhpFormatterMap[$formatter]))
+        {
+            //use default formatter if not found
+            $formatter = $this->defaultFormatter;
+
+            //if (YII_DEBUG) Yii::error("Formatter $formatter not found.", __METHOD__);
+        }
+
+        return $this->scssPhpFormatterMap[$formatter];
     }
 }
