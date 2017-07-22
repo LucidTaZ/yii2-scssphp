@@ -133,7 +133,7 @@ class ScssAssetConverterTest extends TestCase
     public function testConvertRespectsForceConvert()
     {
         $this->storage->touch('base/path/already_converted.scss', 5);
-        $this->storage->touch('base/path/already_converted.css', 6); // Older
+        $this->storage->touch('base/path/already_converted.css', 6); // Newer
 
         $assetConverter = new ScssAssetConverter(['storage' => $this->storage, 'forceConvert' => true]);
         $result = $assetConverter->convert('already_converted.scss', 'base/path');
