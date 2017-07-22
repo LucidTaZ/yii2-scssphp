@@ -2,13 +2,32 @@
 
 namespace lucidtaz\yii2scssphp\tests;
 
-use Leafo\ScssPhp\Compiler;
 use lucidtaz\yii2scssphp\ScssAssetConverter;
 use lucidtaz\yii2scssphp\storage\FsStorage;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Yii;
 
+/**
+ * Main test class
+ *
+ * The testing logic is built as follows: the system should be tested as
+ * straightforwardly as possible, preferably without mocking.
+ *
+ * Filesystem access is virtual is most cases: we inject a "MemoryStorage" into
+ * the converter, instead of the default. This means that the library works as
+ * it normally would, only we inspect the MemoryStorage object to see the result
+ * of the calls.
+ *
+ * This has a number of advantages, one of which is that the storage is always
+ * in a known state before the test begins. Another one is that we don't pollute
+ * the storage with generated files, so we don't have to worry about cleaning
+ * up.
+ *
+ * In some cases however it's not possible to fully isolate the storage access,
+ * for example if the underlying libraries use the filesystem directly. That's
+ * why there is also a second form of testing logic: actually using .css and
+ * .scss files on the filesystem. These tests should have preparation and
+ * cleanup code to make sure everything stays sane.
+ */
 class ScssAssetConverterTest extends TestCase
 {
     private $storage;
@@ -70,10 +89,6 @@ class ScssAssetConverterTest extends TestCase
         $this->assertEquals("#blop {\n  color: black; }\n", $generatedCss);
     }
 
-    /**
-     * @todo Implement
-     * @incomplete
-     */
     public function testConvertHandlesImport()
     {
         // Unfortunately we cannot currently test this using the mocked
@@ -104,107 +119,56 @@ class ScssAssetConverterTest extends TestCase
 
     public function testConvertSkipsUpToDateResults()
     {
-        // This test could also be written by inspecting before and after file contents, to see the file was not overwritten
-        $compiler = $this->prophesize(Compiler::class);
-        $compiler->compile()
-            ->shouldNotBeCalled();
-        $compiler->setImportPaths(Argument::type('string'))
-            ->willReturn();
-        // NOTE: We should even test that the inFile contents are never read from storage
-
         $this->storage->touch('base/path/already_converted.scss', 5);
         $this->storage->touch('base/path/already_converted.css', 6); // Newer
 
-        try {
-            Yii::$container->set(Compiler::class, $compiler->reveal());
+        $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
+        $result = $assetConverter->convert('already_converted.scss', 'base/path');
+        $this->assertEquals('already_converted.css', $result);
 
-            $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
-            $result = $assetConverter->convert('already_converted.scss', 'base/path');
-            $this->assertEquals('already_converted.css', $result);
-        } finally {
-            Yii::$container->clear(Compiler::class);
-        }
+        $currentModificationTime = $this->storage->getMtime('base/path/already_converted.css');
+        $this->assertEquals(6, $currentModificationTime, 'File modification time should not change');
     }
 
     public function testConvertRespectsForceConvert()
     {
-        // This test could also be written by inspecting before and after file contents, to see the file was overwritten
-        $compiler = $this->prophesize(Compiler::class);
-        $compiler->compile(Argument::cetera())
-            ->shouldBeCalled()
-            ->willReturn('dummy result');
-        $compiler->setImportPaths(Argument::type('string'))
-            ->willReturn();
-
         $this->storage->touch('base/path/already_converted.scss', 5);
-        $this->storage->touch('base/path/already_converted.css', 4); // Older
+        $this->storage->touch('base/path/already_converted.css', 6); // Newer
 
-        try {
-            Yii::$container->set(Compiler::class, $compiler->reveal());
+        $assetConverter = new ScssAssetConverter(['storage' => $this->storage, 'forceConvert' => true]);
+        $result = $assetConverter->convert('already_converted.scss', 'base/path');
+        $this->assertEquals('already_converted.css', $result);
 
-            $assetConverter = new ScssAssetConverter(['storage' => $this->storage, 'forceConvert' => true]);
-            $result = $assetConverter->convert('already_converted.scss', 'base/path');
-            $this->assertEquals('already_converted.css', $result);
-            $generatedResult = $this->storage->get('base/path/already_converted.css');
-            $this->assertEquals('dummy result', $generatedResult);
-        } finally {
-            Yii::$container->clear(Compiler::class);
-        }
+        $currentModificationTime = $this->storage->getMtime('base/path/already_converted.css');
+        $this->assertGreaterThan(6, $currentModificationTime, 'The modification time has increased');
     }
 
     public function testConvertWorksOnOutdatedResults()
     {
-        // This test could also be written by inspecting before and after file contents, to see the file was overwritten
-        $compiler = $this->prophesize(Compiler::class);
-        $compiler->compile(Argument::cetera())
-            ->shouldBeCalled()
-            ->willReturn('dummy result');
-        $compiler->setImportPaths(Argument::type('string'))
-            ->willReturn();
-
         $this->storage->touch('base/path/already_converted.scss', 5);
         $this->storage->touch('base/path/already_converted.css', 4); // Older
 
-        try {
-            Yii::$container->set(Compiler::class, $compiler->reveal());
+        $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
+        $result = $assetConverter->convert('already_converted.scss', 'base/path');
+        $this->assertEquals('already_converted.css', $result);
 
-            $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
-            $result = $assetConverter->convert('already_converted.scss', 'base/path');
-            $this->assertEquals('already_converted.css', $result);
-            $generatedResult = $this->storage->get('base/path/already_converted.css');
-            $this->assertEquals('dummy result', $generatedResult);
-        } finally {
-            Yii::$container->clear(Compiler::class);
-        }
+        $currentModificationTime = $this->storage->getMtime('base/path/already_converted.css');
+        $this->assertGreaterThan(4, $currentModificationTime, 'The modification time has increased');
     }
 
     public function testConvertWorksOnUnknownAgeResults()
     {
-        // This test could also be written by inspecting before and after file contents, to see the file was overwritten
-        // We will simulate a filesystem corruption upon checking the age of the file
-        $compiler = $this->prophesize(Compiler::class);
-        $compiler->compile(Argument::cetera())
-            ->shouldBeCalled()
-            ->willReturn('dummy result');
-        $compiler->setImportPaths(Argument::type('string'))
-            ->willReturn();
-
         $this->storage->touch('base/path/already_converted.scss', 5);
         $this->storage->touch('base/path/already_converted.css', 4); // Older
 
         $corruptStorage = new CorruptStorageDecorator($this->storage);
         $corruptStorage->corruptGetMtime = true;
 
-        try {
-            Yii::$container->set(Compiler::class, $compiler->reveal());
+        $assetConverter = new ScssAssetConverter(['storage' => $corruptStorage]);
+        $result = $assetConverter->convert('already_converted.scss', 'base/path');
+        $this->assertEquals('already_converted.css', $result);
 
-            $assetConverter = new ScssAssetConverter(['storage' => $corruptStorage]);
-            $result = $assetConverter->convert('already_converted.scss', 'base/path');
-            $this->assertEquals('already_converted.css', $result);
-            $generatedResult = $this->storage->get('base/path/already_converted.css');
-            $this->assertEquals('dummy result', $generatedResult);
-        } finally {
-            Yii::$container->clear(Compiler::class);
-        }
+        $currentModificationTime = $this->storage->getMtime('base/path/already_converted.css');
+        $this->assertGreaterThan(4, $currentModificationTime, 'The modification time has increased');
     }
 }
