@@ -86,9 +86,10 @@ class Installer
     {
         $output = $this->output;
 
-        $output("Updating composer.json to read library from disk...\n");
-
         $escapedRepositoryUrl = escapeshellarg(realpath($this->librarySourceDirectory));
+
+        $output("Updating composer.json to read library from disk...\n");
+        $output("Disk path is: $escapedRepositoryUrl\n");
 
         $addRepoProcess = new Process(
             "composer config --no-interaction repositories.lucidtaz path $escapedRepositoryUrl",
