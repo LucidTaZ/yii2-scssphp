@@ -1,0 +1,3 @@
+parameters:
+    excludes_analyse:
+        - tests/integration/files/AppAsset.php

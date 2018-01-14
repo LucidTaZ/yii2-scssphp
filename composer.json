@@ -12,7 +12,9 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^6.2",
-        "phpstan/phpstan": "^0.7.0"
+        "phpstan/phpstan": "^0.7.0",
+        "symfony/process": "^4.0",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "autoload": {
         "psr-4": { "lucidtaz\\yii2scssphp\\": "src/" }
@@ -33,11 +35,15 @@
         }
     ],
     "scripts": {
-        "test": "@php vendor/bin/phpunit",
-        "stan": "@php vendor/bin/phpstan analyse src tests --level=7 --autoload-file=vendor/yiisoft/yii2/Yii.php",
+        "install-integration-test": "@php tests/integration/install.php",
+        "test": "@php vendor/bin/phpunit --testsuite=Unit",
+        "integration-test": "@php vendor/bin/phpunit --testsuite=Integration",
+        "stan": "@php vendor/bin/phpstan analyse src tests --level=7 --autoload-file=vendor/yiisoft/yii2/Yii.php --configuration=phpstan.neon",
         "ci": [
             "@test",
-            "@stan"
+            "@stan",
+            "@install-integration-test",
+            "@integration-test"
         ]
     }
 }
