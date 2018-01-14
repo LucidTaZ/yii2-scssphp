@@ -21,6 +21,7 @@ class IntegrationTest extends TestCase
         $testApplicationPath = sys_get_temp_dir() . '/yii2-scssphp-integration-test-root';
         $webroot = $testApplicationPath . '/web';
 
+        echo "Starting Web server...\n";
         self::$process = new Process('php -S localhost:8080 -t ' . escapeshellarg($webroot));
         self::$process->start();
         usleep(100000); // Wait for server to get going
@@ -28,7 +29,10 @@ class IntegrationTest extends TestCase
 
     public static function tearDownAfterClass()
     {
-        self::$process->stop();
+        echo "Stopping Web server...\n";
+        $exitCode = self::$process->stop();
+        $isTerminated = self::$process->isTerminated();
+        echo "Exit code: $exitCode, is terminated: $isTerminated...\n";
     }
 
     public function testWebserver()
@@ -60,5 +64,11 @@ class IntegrationTest extends TestCase
 
         $expectedContents = "#blop {\n  color: black; }\n";
         $this->assertEquals($expectedContents, $response->getBody()->getContents());
+    }
+
+    public function testFindOutWhyTravisHangs()
+    {
+        echo "Finding out why travis hangs...";
+        system('ps aux');
     }
 }

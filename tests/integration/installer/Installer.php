@@ -26,6 +26,11 @@ class Installer
      */
     private $innerProcessTimeoutSeconds = 60*60;
 
+    /**
+     * @var array
+     */
+    private $innerProcessEnv;
+
     public function __construct(
         string $librarySourceDirectory,
         string $projectTargetDirectory,
@@ -36,6 +41,11 @@ class Installer
         $this->output = $output ?? function () {
             // Ignore, no output
         };
+        // Filter ENV, otherwise it could take "--prefer-stable --prefer-lowest" from the Travis env
+        $this->innerProcessEnv = [
+            // Make sure it is not inherited
+            'COMPOSER_OPTIONS' => false,
+        ];
     }
 
     public function run()
@@ -52,7 +62,9 @@ class Installer
 
         $output("Cleaning up previous install...\n");
 
-        $process = new Process('rm -rf ' . escapeshellarg($this->projectTargetDirectory));
+        $process = new Process(
+            'rm -rf ' . escapeshellarg($this->projectTargetDirectory)
+        );
         $process->run();
     }
 
@@ -74,7 +86,7 @@ class Installer
         $process->setTimeout($this->innerProcessTimeoutSeconds);
         $statusCode = $process->run(function (string $type, string $data) use ($output) {
             $output($data);
-        });
+        }, $this->innerProcessEnv);
 
         if ($statusCode !== 0) {
             $output("Yii installation failed.\n");
@@ -97,7 +109,7 @@ class Installer
         );
         $addRepoProcess->run(function (string $type, string $data) use ($output) {
             $output($data);
-        });
+        }, $this->innerProcessEnv);
 
         $output("Installing library to $this->projectTargetDirectory...\n");
 
@@ -108,7 +120,7 @@ class Installer
         $installLibraryProcess->setTimeout($this->innerProcessTimeoutSeconds);
         $installLibraryProcess->run(function (string $type, string $data) use ($output) {
             $output($data);
-        });
+        }, $this->innerProcessEnv);
     }
 
     private function insertTestApplicationCode()
