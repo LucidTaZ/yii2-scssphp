@@ -8,6 +8,7 @@ use lucidtaz\yii2scssphp\storage\Storage;
 use RuntimeException;
 use Yii;
 use yii\base\Component;
+use yii\helpers\FileHelper;
 use yii\web\AssetConverterInterface;
 
 class ScssAssetConverter extends Component implements AssetConverterInterface
@@ -28,6 +29,26 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
 
     private $compiler;
 
+    /**
+     * Set the destination folder where to copy the compiled css file.
+     * If the value is null, then it will be generated into the sourcePath of the asset bundle.
+     *
+     * ```
+     * 'assetManager' => [
+     *     'converter' => [
+     *         'class' => \lucidtaz\yii2scssphp\ScssAssetConverter::class,
+     *         'distFolder' => 'css',
+     *     ],
+     * ],
+     * ```
+     *
+     * @var string|null
+     */
+    public $distFolder;
+
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
     public function init()
     {
         parent::init();
@@ -42,6 +63,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
      * @param string $asset the asset file path, relative to $basePath
      * @param string $basePath the directory the $asset is relative to.
      * @return string the converted asset file path, relative to $basePath.
+     * @throws \yii\base\Exception
      */
     public function convert($asset, $basePath)
     {
@@ -49,7 +71,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         if ($extension !== 'scss') {
             return $asset;
         }
-        $cssAsset = $this->replaceExtension($asset, 'css');
+        $cssAsset = $this->getCssAsset($asset, 'css');
 
         $inFile = "$basePath/$asset";
         $outFile = "$basePath/$cssAsset";
@@ -71,16 +93,22 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         return pathinfo($filename, PATHINFO_EXTENSION);
     }
 
-    private function replaceExtension(string $filename, string $newExtension): string
+    private function getCssAsset(string $filename, string $newExtension): string
     {
-        $extensionlessFilename = pathinfo($filename, PATHINFO_FILENAME);
-        return "$extensionlessFilename.$newExtension";
+        $newFileName = pathinfo($filename, PATHINFO_FILENAME) . '.' . $newExtension;
+        return $this->distFolder ? $this->distFolder . '/' . $newFileName : $newFileName;
     }
 
+    /**
+     * @param string $inFile
+     * @param string $outFile
+     * @throws \yii\base\Exception
+     */
     private function convertAndSaveIfNeeded(string $inFile, string $outFile)
     {
         if ($this->shouldConvert($inFile, $outFile)) {
             $css = $this->compiler->compile($this->storage->get($inFile), $inFile);
+            $this->createDistFolderIfNotExists($outFile);
             $this->storage->put($outFile, $css);
         }
     }
@@ -104,5 +132,17 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
     private function isOlder(string $fileA, string $fileB): bool
     {
         return $this->storage->getMtime($fileA) < $this->storage->getMtime($fileB);
+    }
+
+    /**
+     * @param string $outFile
+     * @throws \yii\base\Exception
+     */
+    private function createDistFolderIfNotExists($outFile)
+    {
+        $dir = dirname($outFile);
+        if (!is_dir($dir)) {
+            FileHelper::createDirectory($dir);
+        }
     }
 }
