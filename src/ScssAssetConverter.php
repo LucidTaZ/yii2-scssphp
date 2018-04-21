@@ -27,9 +27,6 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
      */
     public $forceConvert = false;
 
-    /**
-     * @var Compiler
-     */
     private $compiler;
 
     /**
@@ -133,7 +130,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
     }
 
     /**
-     * @param $outFile
+     * @param string $outFile
      * @throws \yii\base\Exception
      */
     private function createDistFolderIfNotExists($outFile)
