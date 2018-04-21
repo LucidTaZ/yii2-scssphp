@@ -30,6 +30,24 @@ $config = [
 ];
 ```
 
+If you would like to configure the destination folder of the compiled css, then configure the converter in `web.php` in the following way:
+
+```php
+$config = [
+    ...
+    'components' => [
+        'assetManager' => [
+            'converter' => [
+                'class' => 'lucidtaz\yii2scssphp\ScssAssetConverter',
+                'distFolder => 'css',
+            ],
+        ],
+        ...
+    ],
+    ...
+];
+```
+
 If the `AppAsset` is placed in `/assets` and the scss file in
 `/assets/source/site.scss`, your `AppAsset.php` could look like:
 
