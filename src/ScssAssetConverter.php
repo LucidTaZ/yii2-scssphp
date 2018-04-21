@@ -28,6 +28,23 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
 
     private $compiler;
 
+    /**
+     * Set the destination folder where to copy the compiled css file.
+     * If the value is null, then it will be generated into the sourcePath of the asset bundle.
+     *
+     * ```
+     * 'assetManager' => [
+     *     'converter' => [
+     *         'class' => \lucidtaz\yii2scssphp\ScssAssetConverter::class,
+     *         'distFolder' => 'css',
+     *     ],
+     * ],
+     * ```
+     *
+     * @var string|null
+     */
+    public $distFolder;
+
     public function init()
     {
         parent::init();
@@ -52,7 +69,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         $cssAsset = $this->replaceExtension($asset, 'css');
 
         $inFile = "$basePath/$asset";
-        $outFile = "$basePath/$cssAsset";
+        $outFile = $this->distFolder ? "$basePath/$this->distFolder/$cssAsset" : "$basePath/$cssAsset";
         
         $this->compiler->setImportPaths(dirname($inFile));
 
@@ -63,7 +80,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
 
         $this->convertAndSaveIfNeeded($inFile, $outFile);
 
-        return $cssAsset;
+        return $this->distFolder ? $this->distFolder . '/' . $cssAsset : $cssAsset;
     }
 
     private function getExtension(string $filename): string
