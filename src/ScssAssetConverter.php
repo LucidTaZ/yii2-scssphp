@@ -71,10 +71,10 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         if ($extension !== 'scss') {
             return $asset;
         }
-        $cssAsset = $this->replaceExtension($asset, 'css');
+        $cssAsset = $this->getCssAsset($asset, 'css');
 
         $inFile = "$basePath/$asset";
-        $outFile = $this->distFolder ? "$basePath/$this->distFolder/$cssAsset" : "$basePath/$cssAsset";
+        $outFile = "$basePath/$cssAsset";
         
         $this->compiler->setImportPaths(dirname($inFile));
 
@@ -85,7 +85,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
 
         $this->convertAndSaveIfNeeded($inFile, $outFile);
 
-        return $this->distFolder ? $this->distFolder . '/' . $cssAsset : $cssAsset;
+        return $cssAsset;
     }
 
     private function getExtension(string $filename): string
@@ -93,12 +93,17 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         return pathinfo($filename, PATHINFO_EXTENSION);
     }
 
-    private function replaceExtension(string $filename, string $newExtension): string
+    private function getCssAsset(string $filename, string $newExtension): string
     {
-        $extensionlessFilename = pathinfo($filename, PATHINFO_FILENAME);
-        return "$extensionlessFilename.$newExtension";
+        $newFileName = pathinfo($filename, PATHINFO_FILENAME) . '.' . $newExtension;
+        return $this->distFolder ? $this->distFolder . '/' . $newFileName : $newFileName;
     }
 
+    /**
+     * @param string $inFile
+     * @param string $outFile
+     * @throws \yii\base\Exception
+     */
     private function convertAndSaveIfNeeded(string $inFile, string $outFile)
     {
         if ($this->shouldConvert($inFile, $outFile)) {
