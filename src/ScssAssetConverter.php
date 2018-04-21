@@ -83,7 +83,6 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
             return $asset;
         }
 
-        $this->createDistFolderIfNotExists($outFile);
         $this->convertAndSaveIfNeeded($inFile, $outFile);
 
         return $this->distFolder ? $this->distFolder . '/' . $cssAsset : $cssAsset;
@@ -104,6 +103,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
     {
         if ($this->shouldConvert($inFile, $outFile)) {
             $css = $this->compiler->compile($this->storage->get($inFile), $inFile);
+            $this->createDistFolderIfNotExists($outFile);
             $this->storage->put($outFile, $css);
         }
     }
