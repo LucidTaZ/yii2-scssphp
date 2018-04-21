@@ -26,6 +26,9 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
      */
     public $forceConvert = false;
 
+    /**
+     * @var Compiler
+     */
     private $compiler;
 
     /**
@@ -45,6 +48,9 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
      */
     public $distFolder;
 
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
     public function init()
     {
         parent::init();
