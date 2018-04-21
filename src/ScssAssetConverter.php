@@ -26,7 +26,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
      */
     public $forceConvert = false;
 
-    private $compiler;
+    protected $compiler;
 
     public function init()
     {
@@ -66,18 +66,18 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         return $cssAsset;
     }
 
-    private function getExtension(string $filename): string
+    protected function getExtension(string $filename): string
     {
         return pathinfo($filename, PATHINFO_EXTENSION);
     }
 
-    private function replaceExtension(string $filename, string $newExtension): string
+    protected function replaceExtension(string $filename, string $newExtension): string
     {
         $extensionlessFilename = pathinfo($filename, PATHINFO_FILENAME);
         return "$extensionlessFilename.$newExtension";
     }
 
-    private function convertAndSaveIfNeeded(string $inFile, string $outFile)
+    protected function convertAndSaveIfNeeded(string $inFile, string $outFile)
     {
         if ($this->shouldConvert($inFile, $outFile)) {
             $css = $this->compiler->compile($this->storage->get($inFile), $inFile);
