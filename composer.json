@@ -8,7 +8,7 @@
     "require": {
         "php": ">=7.0.0",
         "yiisoft/yii2": "^2.0",
-        "leafo/scssphp": "^0.6.3"
+        "leafo/scssphp": "^0.7.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.2",
