@@ -8,6 +8,7 @@ use lucidtaz\yii2scssphp\storage\Storage;
 use RuntimeException;
 use Yii;
 use yii\base\Component;
+use yii\helpers\FileHelper;
 use yii\web\AssetConverterInterface;
 
 class ScssAssetConverter extends Component implements AssetConverterInterface
@@ -65,6 +66,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
      * @param string $asset the asset file path, relative to $basePath
      * @param string $basePath the directory the $asset is relative to.
      * @return string the converted asset file path, relative to $basePath.
+     * @throws \yii\base\Exception
      */
     public function convert($asset, $basePath)
     {
@@ -84,6 +86,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
             return $asset;
         }
 
+        $this->createDistFolderIfNotExists($outFile);
         $this->convertAndSaveIfNeeded($inFile, $outFile);
 
         return $this->distFolder ? $this->distFolder . '/' . $cssAsset : $cssAsset;
@@ -127,5 +130,17 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
     private function isOlder(string $fileA, string $fileB): bool
     {
         return $this->storage->getMtime($fileA) < $this->storage->getMtime($fileB);
+    }
+
+    /**
+     * @param $outFile
+     * @throws \yii\base\Exception
+     */
+    private function createDistFolderIfNotExists($outFile)
+    {
+        $dir = dirname($outFile);
+        if (!is_dir($dir)) {
+            FileHelper::createDirectory($dir);
+        }
     }
 }
