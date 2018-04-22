@@ -27,7 +27,8 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
     public $forceConvert = false;
 
     /**
-     * @var Compiler
+     * @var Compiler|mixed The mixed type hint is added to keep PHPStan happy,
+     * since Yii was annotated to return "object" which confuses PHPStan.
      */
     private $compiler;
 
