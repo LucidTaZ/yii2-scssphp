@@ -80,7 +80,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
      * @param string $newExtension e.g. scss
      * @return string e.g. path/asset.scss
      */
-    private function getCssAsset(string $filename, string $newExtension): string
+    protected function getCssAsset(string $filename, string $newExtension): string
     {
         $extensionlessFilename = pathinfo($filename, PATHINFO_FILENAME);
         $filenamePosition = strrpos($filename, $extensionlessFilename);

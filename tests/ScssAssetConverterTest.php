@@ -183,4 +183,27 @@ class ScssAssetConverterTest extends TestCase
         $currentModificationTime = $this->storage->getMtime('base/path/already_converted.css');
         $this->assertGreaterThan(4, $currentModificationTime, 'The modification time has increased');
     }
+
+    public function testGetCssAssetIsOverridable()
+    {
+        $overridedConverter = new OverridedConverter(['storage' => $this->storage]);
+        $overridedConverter->overridedCssAssetResult = 'overrided/file.ext';
+
+        $result = $overridedConverter->convert('asset.scss', 'base/path');
+        $this->assertEquals('overrided/file.ext', $result);
+        $this->assertTrue($this->storage->exists('base/path/overrided/file.ext'));
+    }
+
+    public function testAlbertBorsosUseCase()
+    {
+        // More info: https://github.com/LucidTaZ/yii2-scssphp/pull/12
+        $this->storage->put('base/path/scss/style.scss', "#blop { color: black; }");
+
+        $overridedConverter = new OverridedConverter(['storage' => $this->storage]);
+        $overridedConverter->overridedCssAssetResult = 'css/style.css';
+
+        $result = $overridedConverter->convert('scss/style.scss', 'base/path');
+        $this->assertEquals('css/style.css', $result);
+        $this->assertTrue($this->storage->exists('base/path/css/style.css'));
+    }
 }
