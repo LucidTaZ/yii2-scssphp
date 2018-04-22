@@ -4,6 +4,7 @@ namespace lucidtaz\yii2scssphp\tests;
 
 use lucidtaz\yii2scssphp\ScssAssetConverter;
 use lucidtaz\yii2scssphp\storage\FsStorage;
+use lucidtaz\yii2scssphp\storage\Storage;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -30,6 +31,9 @@ use PHPUnit\Framework\TestCase;
  */
 class ScssAssetConverterTest extends TestCase
 {
+    /**
+     * @var Storage
+     */
     private $storage;
 
     public function setUp()
@@ -65,6 +69,14 @@ class ScssAssetConverterTest extends TestCase
         $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
         $result = $assetConverter->convert('other.css', 'base/path');
         $this->assertEquals('other.css', $result);
+    }
+
+    public function testConvertKeepsRelativePathIntact()
+    {
+        $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
+        $result = $assetConverter->convert('path/asset.scss', 'base');
+        $this->assertEquals('path/asset.css', $result);
+        $this->assertTrue($this->storage->exists('base/path/asset.css'));
     }
 
     public function testConvertLeavesNonExistingFileAlone()
