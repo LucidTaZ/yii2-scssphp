@@ -4,6 +4,7 @@ namespace lucidtaz\yii2scssphp\tests;
 
 use lucidtaz\yii2scssphp\ScssAssetConverter;
 use lucidtaz\yii2scssphp\storage\FsStorage;
+use lucidtaz\yii2scssphp\storage\Storage;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -30,6 +31,9 @@ use PHPUnit\Framework\TestCase;
  */
 class ScssAssetConverterTest extends TestCase
 {
+    /**
+     * @var Storage
+     */
     private $storage;
 
     public function setUp()
@@ -65,6 +69,14 @@ class ScssAssetConverterTest extends TestCase
         $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
         $result = $assetConverter->convert('other.css', 'base/path');
         $this->assertEquals('other.css', $result);
+    }
+
+    public function testConvertKeepsRelativePathIntact()
+    {
+        $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
+        $result = $assetConverter->convert('path/asset.scss', 'base');
+        $this->assertEquals('path/asset.css', $result);
+        $this->assertTrue($this->storage->exists('base/path/asset.css'));
     }
 
     public function testConvertLeavesNonExistingFileAlone()
@@ -170,5 +182,28 @@ class ScssAssetConverterTest extends TestCase
 
         $currentModificationTime = $this->storage->getMtime('base/path/already_converted.css');
         $this->assertGreaterThan(4, $currentModificationTime, 'The modification time has increased');
+    }
+
+    public function testGetCssAssetIsOverridable()
+    {
+        $overridedConverter = new OverridedConverter(['storage' => $this->storage]);
+        $overridedConverter->overridedCssAssetResult = 'overrided/file.ext';
+
+        $result = $overridedConverter->convert('asset.scss', 'base/path');
+        $this->assertEquals('overrided/file.ext', $result);
+        $this->assertTrue($this->storage->exists('base/path/overrided/file.ext'));
+    }
+
+    public function testAlbertBorsosUseCase()
+    {
+        // More info: https://github.com/LucidTaZ/yii2-scssphp/pull/12
+        $this->storage->put('base/path/scss/style.scss', "#blop { color: black; }");
+
+        $overridedConverter = new OverridedConverter(['storage' => $this->storage]);
+        $overridedConverter->overridedCssAssetResult = 'css/style.css';
+
+        $result = $overridedConverter->convert('scss/style.scss', 'base/path');
+        $this->assertEquals('css/style.css', $result);
+        $this->assertTrue($this->storage->exists('base/path/css/style.css'));
     }
 }
