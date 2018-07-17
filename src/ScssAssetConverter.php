@@ -13,6 +13,16 @@ use yii\web\AssetConverterInterface;
 class ScssAssetConverter extends Component implements AssetConverterInterface
 {
     /**
+     * Formatter types for format of outputs CSS as a string.
+     */
+    const FORMAT_COMPACT       = '\Leafo\ScssPhp\Formatter\Compact';
+    const FORMAT_COMPRESSED    = '\Leafo\ScssPhp\Formatter\Compressed';
+    const FORMAT_CRUNCHED      = '\Leafo\ScssPhp\Formatter\Crunched';
+    const FORMAT_DEBUG         = '\Leafo\ScssPhp\Formatter\Debug';
+    const FORMAT_EXPANDED      = '\Leafo\ScssPhp\Formatter\Expanded';
+    const FORMAT_NESTED        = '\Leafo\ScssPhp\Formatter\Nested';
+
+    /**
      * @var Storage
      */
     public $storage;
@@ -26,20 +36,11 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
      */
     public $forceConvert = false;
     
-    public $formatter = null;
+    /**
+     * @var string|\Leafo\ScssPhp\Formatter
+     */
+    public $formatter = '\Leafo\ScssPhp\Formatter\Nested';
     
-    protected $scssPhpFormatterMap =
-    [
-        'compact'       => '\Leafo\ScssPhp\Formatter\Compact',
-        'compressed'    => '\Leafo\ScssPhp\Formatter\Compressed',
-        'crunched'      => '\Leafo\ScssPhp\Formatter\Crunched',
-        'debug'         => '\Leafo\ScssPhp\Formatter\Debug',
-        'expanded'      => '\Leafo\ScssPhp\Formatter\Expanded',
-        'nested'        => '\Leafo\ScssPhp\Formatter\Nested',
-    ];
-
-    protected $defaultFormatter = 'nested';
-
     protected $compiler;
 
     public function init()
@@ -50,7 +51,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         }
         $this->compiler = Yii::createObject(Compiler::class);
         
-        $this->compiler->setFormatter($this->getScssPhpFormatterClass($this->formatter));
+        $this->compiler->setFormatter($this->formatter);
     }
 
     /**
@@ -120,18 +121,5 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
     protected function isOlder(string $fileA, string $fileB): bool
     {
         return $this->storage->getMtime($fileA) < $this->storage->getMtime($fileB);
-    }
-    
-    protected function getScssPhpFormatterClass($formatter): string
-    {
-        if (!isset($this->scssPhpFormatterMap[$formatter]))
-        {
-            //use default formatter if not found
-            $formatter = $this->defaultFormatter;
-
-            //if (YII_DEBUG) Yii::error("Formatter $formatter not found.", __METHOD__);
-        }
-
-        return $this->scssPhpFormatterMap[$formatter];
     }
 }
