@@ -41,6 +41,10 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
      */
     public $formatter = '\Leafo\ScssPhp\Formatter\Nested';
     
+  /**
+     * @var Compiler|mixed The mixed type hint is added to keep PHPStan happy,
+     * since Yii was annotated to return "object" which confuses PHPStan.
+     */
     protected $compiler;
 
     public function init()
@@ -66,7 +70,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         if ($extension !== 'scss') {
             return $asset;
         }
-        $cssAsset = $this->replaceExtension($asset, 'css');
+        $cssAsset = $this->getCssAsset($asset, 'css');
 
         $inFile = "$basePath/$asset";
         $outFile = "$basePath/$cssAsset";
@@ -88,10 +92,18 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         return pathinfo($filename, PATHINFO_EXTENSION);
     }
 
-    protected function replaceExtension(string $filename, string $newExtension): string
+    /**
+     * Get the relative path and filename of the asset
+     * @param string $filename e.g. path/asset.css
+     * @param string $newExtension e.g. scss
+     * @return string e.g. path/asset.scss
+     */
+    protected function getCssAsset(string $filename, string $newExtension): string
     {
         $extensionlessFilename = pathinfo($filename, PATHINFO_FILENAME);
-        return "$extensionlessFilename.$newExtension";
+        $filenamePosition = strrpos($filename, $extensionlessFilename);
+        $relativePath = substr($filename, 0, $filenamePosition);
+        return "$relativePath$extensionlessFilename.$newExtension";
     }
 
     protected function convertAndSaveIfNeeded(string $inFile, string $outFile)

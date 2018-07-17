@@ -1,9 +1,16 @@
 language: php
 php:
   - '7.0'
+  - '7.1'
+  - '7.2'
+
+env:
+  matrix:
+    - COMPOSER_OPTIONS="--prefer-lowest --prefer-stable"
+    - COMPOSER_OPTIONS=""
 
 install:
-  - composer install
+  - composer update $COMPOSER_OPTIONS
 
 script:
   - composer ci
