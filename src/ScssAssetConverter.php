@@ -15,12 +15,12 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
     /**
      * Formatter types for format of outputs CSS as a string.
      */
-    const FORMAT_COMPACT       = '\Leafo\ScssPhp\Formatter\Compact';
-    const FORMAT_COMPRESSED    = '\Leafo\ScssPhp\Formatter\Compressed';
-    const FORMAT_CRUNCHED      = '\Leafo\ScssPhp\Formatter\Crunched';
-    const FORMAT_DEBUG         = '\Leafo\ScssPhp\Formatter\Debug';
-    const FORMAT_EXPANDED      = '\Leafo\ScssPhp\Formatter\Expanded';
-    const FORMAT_NESTED        = '\Leafo\ScssPhp\Formatter\Nested';
+    const FORMAT_COMPACT       = \Leafo\ScssPhp\Formatter\Compact::class;
+    const FORMAT_COMPRESSED    = \Leafo\ScssPhp\Formatter\Compressed::class;
+    const FORMAT_CRUNCHED      = \Leafo\ScssPhp\Formatter\Crunched::class;
+    const FORMAT_DEBUG         = \Leafo\ScssPhp\Formatter\Debug::class;
+    const FORMAT_EXPANDED      = \Leafo\ScssPhp\Formatter\Expanded::class;
+    const FORMAT_NESTED        = \Leafo\ScssPhp\Formatter\Nested::class;
 
     /**
      * @var Storage
@@ -39,7 +39,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
     /**
      * @var string|\Leafo\ScssPhp\Formatter
      */
-    public $formatter = '\Leafo\ScssPhp\Formatter\Nested';
+    public $formatter = \Leafo\ScssPhp\Formatter\Nested::class;
     
   /**
      * @var Compiler|mixed The mixed type hint is added to keep PHPStan happy,
