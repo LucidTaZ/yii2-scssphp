@@ -41,9 +41,8 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
      */
     public $formatter = \Leafo\ScssPhp\Formatter\Nested::class;
     
-  /**
-     * @var Compiler|mixed The mixed type hint is added to keep PHPStan happy,
-     * since Yii was annotated to return "object" which confuses PHPStan.
+    /**
+     * @var Compiler SCSSPHP Compiler object which does the actual work
      */
     protected $compiler;
 
@@ -53,9 +52,11 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         if (!isset($this->storage)) {
             $this->storage = new FsStorage;
         }
-        $this->compiler = Yii::createObject(Compiler::class);
-        
-        $this->compiler->setFormatter($this->formatter);
+
+      /** @var Compiler $compiler */
+        $compiler = Yii::createObject(Compiler::class);
+        $compiler->setFormatter($this->formatter);
+        $this->compiler = $compiler;
     }
 
     /**
