@@ -52,10 +52,10 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         if (!isset($this->storage)) {
             $this->storage = new FsStorage;
         }
-
-      /** @var Compiler $compiler */
+        
+        /** @var Compiler $compiler */
         $compiler = Yii::createObject(Compiler::class);
-        $compiler->setFormatter($this->formatter);
+        $compiler->setFormatter((string) $this->formatter);
         $this->compiler = $compiler;
     }
 
