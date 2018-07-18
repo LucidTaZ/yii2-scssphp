@@ -44,7 +44,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
     /**
      * @var Compiler SCSSPHP Compiler object which does the actual work
      */
-    protected $compiler;
+    private $compiler;
 
     public function init()
     {
@@ -88,7 +88,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         return $cssAsset;
     }
 
-    protected function getExtension(string $filename): string
+    private function getExtension(string $filename): string
     {
         return pathinfo($filename, PATHINFO_EXTENSION);
     }
@@ -107,7 +107,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         return "$relativePath$extensionlessFilename.$newExtension";
     }
 
-    protected function convertAndSaveIfNeeded(string $inFile, string $outFile)
+    private function convertAndSaveIfNeeded(string $inFile, string $outFile)
     {
         if ($this->shouldConvert($inFile, $outFile)) {
             $css = $this->compiler->compile($this->storage->get($inFile), $inFile);
@@ -115,7 +115,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         }
     }
 
-    protected function shouldConvert(string $inFile, string $outFile): bool
+    private function shouldConvert(string $inFile, string $outFile): bool
     {
         if (!$this->storage->exists($outFile)) {
             return true;
@@ -131,7 +131,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         }
     }
 
-    protected function isOlder(string $fileA, string $fileB): bool
+    private function isOlder(string $fileA, string $fileB): bool
     {
         return $this->storage->getMtime($fileA) < $this->storage->getMtime($fileB);
     }
