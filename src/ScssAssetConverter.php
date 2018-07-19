@@ -23,6 +23,13 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
     const FORMAT_NESTED        = \Leafo\ScssPhp\Formatter\Nested::class;
 
     /**
+     * Source maps constant from Leafo\ScssPhp\Compiler
+     */
+    const SOURCE_MAP_NONE   = Compiler::SOURCE_MAP_NONE;
+    const SOURCE_MAP_INLINE = Compiler::SOURCE_MAP_INLINE;
+    const SOURCE_MAP_FILE   = Compiler::SOURCE_MAP_FILE;
+
+    /**
      * @var Storage
      */
     public $storage;
@@ -40,6 +47,27 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
      * @var string|\Leafo\ScssPhp\Formatter
      */
     public $formatter = \Leafo\ScssPhp\Formatter\Nested::class;
+
+    /**
+     * @var integer Enable/disable source maps
+     * self::SOURCE_MAP_NONE    - disable source maps generator
+     * self::SOURCE_MAP_INLINE  - source maps generate inside complied css file
+     * self::SOURCE_MAP_FILE    - generate source maps file
+     * 
+     * e.g:
+     * new ScssAssetConverter([
+     *      'sourceMap' => ScssAssetConverter::SOURCE_MAP_INLINE,
+     *      'sourceMapOptions' => [
+     *          'sourceMapBasepath' => '\',
+     *          'sourceRoot' => '\',
+     *      ],
+     * ]);
+     */
+    public $sourceMap = self::SOURCE_MAP_NONE;
+    /**
+     * @var array Source maps options
+     */
+    public $sourceMapOptions = [];
     
     /**
      * @var Compiler SCSSPHP Compiler object which does the actual work
@@ -56,6 +84,10 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         /** @var Compiler $compiler */
         $compiler = Yii::createObject(Compiler::class);
         $compiler->setFormatter((string) $this->formatter);
+
+        $compiler->setSourceMap($this->sourceMap);
+        $compiler->setSourceMapOptions($this->sourceMapOptions);
+
         $this->compiler = $compiler;
     }
 
