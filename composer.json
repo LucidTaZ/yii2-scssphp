@@ -11,9 +11,9 @@
         "leafo/scssphp": "^0.7.5"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.0",
-        "phpstan/phpstan": "^0.10.0",
-        "phpstan/phpstan-phpunit": "^0.10.0"
+        "phpunit/phpunit": "^6.2",
+        "phpstan/phpstan": "~0.9.0",
+        "phpstan/phpstan-phpunit": "~0.9.0"
     },
     "autoload": {
         "psr-4": { "lucidtaz\\yii2scssphp\\": "src/" }
