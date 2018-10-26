@@ -82,7 +82,7 @@ class FsStorageTest extends TestCase
     {
         $storage = new FsStorage;
 
-        $mtime = '123';
+        $mtime = 123;
         $success = touch($this->scratchFilename, $mtime);
         $this->assertTrue($success, 'Test precondition');
 
