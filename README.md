@@ -56,40 +56,48 @@ class AppAsset extends AssetBundle
 }
 ```
 
+In other words; you can just use the `.scss` file(s) in the `$css` array.
+
 ## Customizing the SCSS parser
 
 The underlying library, yii2-scssphp, can be customized in case more flexibility
 is needed. To this end, properties of the `Leafo\ScssPhp\Compiler` object can be
-specified, as follows:
+overridden in the DI container, as follows:
 
 ```php
 <?php
-
-$compiler = new Leafo\ScssPhp\Compiler();
-
-// For example set a formatter:
-$compiler->setFormatter(\Leafo\ScssPhp\Formatter\Compressed::class);
 
 $config = [
     // Other configuration...
 
     'components' => [
         'assetManager' => [
-            'converter' => [
-                'class' => 'lucidtaz\yii2scssphp\ScssAssetConverter',
-                'compiler' => $compiler,
-            ],
+            'converter' => 'lucidtaz\yii2scssphp\ScssAssetConverter',
         ],
 
         // Other components...
+    ],
+    'container' => [
+        'singletons' => [
+            'Leafo\ScssPhp\Compiler' => function () {
+                // You can also use a child class here:
+                $compiler = new Leafo\ScssPhp\Compiler();
+
+                // Customize the object, for example set a formatter:
+                $compiler->setFormatter(\Leafo\ScssPhp\Formatter\Compressed::class);
+
+                return $compiler;
+            },
+        ],
     ],
 
     // Other configuration...
 ];
 ```
 
-In a similar way you can also substitute the compiler with a child class if you
-need even more customization.
+This usage in `config.php` is supported from Yii 2.0.11. Before that you should
+use the DI container directly. In that case, please refer to the Yii Dependency
+Injection readme.
 
 ## Contributing
 
@@ -97,3 +105,7 @@ When contributing code, please make sure the tests keep passing. Additionally
 the code is checked by phpstan to detect any statically analyzable issues.
 
 To run these checks, simply execute `composer ci`.
+
+That being said, please do not hesitate to contribute when the tests fail. If
+you need assistance in making the build green for your pull request, just let me
+know in the PR.
