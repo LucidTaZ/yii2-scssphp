@@ -39,7 +39,8 @@
         "setup-integration": [
             "@teardown-integration",
             "docker build -f docker/integration/Dockerfile -t yii2-scssphp-integration-test .",
-            "docker run -d --rm -p \"8080:8080\" --name yii2-scssphp-integration-test yii2-scssphp-integration-test"
+            "docker run -d --rm -p \"8080:8080\" --name yii2-scssphp-integration-test yii2-scssphp-integration-test",
+            "sleep 5"
         ],
         "integration": [
             "@php vendor/bin/phpunit --testsuite Integration"
