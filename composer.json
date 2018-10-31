@@ -36,18 +36,24 @@
     ],
     "scripts": {
         "unit": "@php vendor/bin/phpunit --testsuite Unit",
-        "integration": [
-            "docker stop yii2-scssphp-integration-test || true",
+        "setup-integration": [
+            "@teardown-integration",
             "docker build -f docker/integration/Dockerfile -t yii2-scssphp-integration-test .",
-            "docker run -d --rm -p \"8080:8080\" --name yii2-scssphp-integration-test yii2-scssphp-integration-test",
-            "@php vendor/bin/phpunit --testsuite Integration",
-            "docker stop yii2-scssphp-integration-test"
+            "docker run -d --rm -p \"8080:8080\" --name yii2-scssphp-integration-test yii2-scssphp-integration-test"
+        ],
+        "integration": [
+            "@php vendor/bin/phpunit --testsuite Integration"
+        ],
+        "teardown-integration": [
+            "docker kill yii2-scssphp-integration-test || true"
         ],
         "stan": "@php vendor/bin/phpstan analyse -c phpstan.neon src tests --level=7 --autoload-file=vendor/yiisoft/yii2/Yii.php",
         "ci": [
             "@stan",
             "@unit",
-            "@integration"
+            "@setup-integration",
+            "@integration",
+            "@teardown-integration"
         ]
     }
 }
