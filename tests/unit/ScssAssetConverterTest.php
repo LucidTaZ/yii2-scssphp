@@ -1,7 +1,8 @@
 <?php
 
-namespace lucidtaz\yii2scssphp\tests;
+namespace lucidtaz\yii2scssphp\tests\unit;
 
+use Leafo\ScssPhp\Compiler;
 use lucidtaz\yii2scssphp\ScssAssetConverter;
 use lucidtaz\yii2scssphp\storage\FsStorage;
 use lucidtaz\yii2scssphp\storage\Storage;

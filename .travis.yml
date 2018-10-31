@@ -12,5 +12,12 @@ env:
 install:
   - composer update $COMPOSER_OPTIONS
 
+before_script:
+  - docker build -f docker/integration/Dockerfile -t yii2-scssphp-integration-test .
+  - docker run -d --rm -p "8080:8080" --name yii2-scssphp-integration-test yii2-scssphp-integration-test
+
 script:
   - composer ci
+
+after_script:
+  - docker stop yii2-scssphp-integration-test

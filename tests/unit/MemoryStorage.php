@@ -1,6 +1,6 @@
 <?php
 
-namespace lucidtaz\yii2scssphp\tests;
+namespace lucidtaz\yii2scssphp\tests\unit;
 
 class MemoryStorage implements \lucidtaz\yii2scssphp\storage\Storage
 {

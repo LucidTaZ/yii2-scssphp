@@ -78,13 +78,13 @@ $config = [
         // Other components...
     ],
     'container' => [
-        'singletons' => [
+        'definitions' => [
             'Leafo\ScssPhp\Compiler' => function () {
                 // You can also use a child class here:
                 $compiler = new Leafo\ScssPhp\Compiler();
 
                 // Customize the object, for example set a formatter:
-                $compiler->setFormatter(\Leafo\ScssPhp\Formatter\Compressed::class);
+                $compiler->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
 
                 return $compiler;
             },

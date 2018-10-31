@@ -1,6 +1,6 @@
 <?php
 
-namespace lucidtaz\yii2scssphp\tests;
+namespace lucidtaz\yii2scssphp\tests\unit;
 
 use lucidtaz\yii2scssphp\storage\FsStorage;
 use PHPUnit\Framework\TestCase;

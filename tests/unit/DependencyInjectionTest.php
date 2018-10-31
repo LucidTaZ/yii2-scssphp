@@ -1,6 +1,6 @@
 <?php
 
-namespace lucidtaz\yii2scssphp\tests;
+namespace lucidtaz\yii2scssphp\tests\unit;
 
 use Leafo\ScssPhp\Compiler;
 use Leafo\ScssPhp\Formatter\Compressed;
