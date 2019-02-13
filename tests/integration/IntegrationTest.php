@@ -10,7 +10,7 @@ class IntegrationTest extends TestCase
     /** @var Client */
     private $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->client = new Client([
@@ -52,7 +52,7 @@ class IntegrationTest extends TestCase
     /**
      * @depends testThatAssetConversionWorks
      */
-    public function testThatItUsesCustomizedConfiguration(string $css)
+    public function testThatItUsesCustomizedConfiguration(string $css): void
     {
         // Verify that the customization done in config/web.php works.
         // Integration test is set up with crunched formatter

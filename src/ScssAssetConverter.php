@@ -93,7 +93,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         return "$relativePath$extensionlessFilename.$newExtension";
     }
 
-    private function convertAndSaveIfNeeded(string $inFile, string $outFile)
+    private function convertAndSaveIfNeeded(string $inFile, string $outFile): void
     {
         if ($this->shouldConvert($inFile, $outFile)) {
             $css = $this->compiler->compile($this->storage->get($inFile), $inFile);

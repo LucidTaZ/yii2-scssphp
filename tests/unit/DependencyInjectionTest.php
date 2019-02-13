@@ -10,13 +10,13 @@ use Yii;
 
 class DependencyInjectionTest extends TestCase
 {
-    public function testThatItInstantiatesFromClassName()
+    public function testThatItInstantiatesFromClassName(): void
     {
         $assetConverter = Yii::createObject(ScssAssetConverter::class);
         $this->assertInstanceOf(ScssAssetConverter::class, $assetConverter);
     }
 
-    public function testThatItInstantiatesFromConfigArray()
+    public function testThatItInstantiatesFromConfigArray(): void
     {
         $assetConverter = Yii::createObject([
             'class' => ScssAssetConverter::class,
@@ -24,7 +24,7 @@ class DependencyInjectionTest extends TestCase
         $this->assertInstanceOf(ScssAssetConverter::class, $assetConverter);
     }
 
-    public function testThatScalarAttributeCanBeCustomized()
+    public function testThatScalarAttributeCanBeCustomized(): void
     {
         $control = new ScssAssetConverter();
         $this->assertFalse($control->forceConvert, 'Test precondition');
@@ -39,7 +39,7 @@ class DependencyInjectionTest extends TestCase
         $this->assertTrue($assetConverter->forceConvert, 'Attribute must be taken from DI parameters');
     }
 
-    public function testThatCompilerCanBeCustomizedDirectly()
+    public function testThatCompilerCanBeCustomizedDirectly(): void
     {
         $input = "#blop { color: black; display: block; }";
         $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block; }\n";
@@ -63,7 +63,7 @@ class DependencyInjectionTest extends TestCase
         $this->assertEquals($expectedCustomizedOutput, $compiled, 'DI formatter customization has effect on compiled output');
     }
 
-    public function testThatCompilerCanBeCustomizedInContainer()
+    public function testThatCompilerCanBeCustomizedInContainer(): void
     {
         $input = "#blop { color: black; display: block; }";
         $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block; }\n";
@@ -89,7 +89,7 @@ class DependencyInjectionTest extends TestCase
         Yii::$container->clear(Compiler::class);
     }
 
-    public function testThatOverriddenCompilerCanBeBoundInContainer()
+    public function testThatOverriddenCompilerCanBeBoundInContainer(): void
     {
         $input = "#blop { color: black; display: block; }";
         $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block; }\n";

@@ -2,7 +2,6 @@
 
 namespace lucidtaz\yii2scssphp\tests\unit;
 
-use Leafo\ScssPhp\Compiler;
 use lucidtaz\yii2scssphp\ScssAssetConverter;
 use lucidtaz\yii2scssphp\storage\FsStorage;
 use lucidtaz\yii2scssphp\storage\Storage;
@@ -37,7 +36,7 @@ class ScssAssetConverterTest extends TestCase
      */
     private $storage;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->storage = new MemoryStorage;
 
@@ -47,32 +46,32 @@ class ScssAssetConverterTest extends TestCase
         $this->storage->put('base/path/already_converted.css', "#blop { color: black; }");
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->storage);
     }
 
-    public function testInitUsesFilesystem()
+    public function testInitUsesFilesystem(): void
     {
         $assetConverter = new ScssAssetConverter;
         $this->assertInstanceOf(FsStorage::class, $assetConverter->storage);
     }
 
-    public function testConvertGivesResult()
+    public function testConvertGivesResult(): void
     {
         $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
         $result = $assetConverter->convert('asset', 'base/path');
         $this->assertNotEmpty($result);
     }
 
-    public function testConvertLeavesCssAlone()
+    public function testConvertLeavesCssAlone(): void
     {
         $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
         $result = $assetConverter->convert('other.css', 'base/path');
         $this->assertEquals('other.css', $result);
     }
 
-    public function testConvertKeepsRelativePathIntact()
+    public function testConvertKeepsRelativePathIntact(): void
     {
         $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
         $result = $assetConverter->convert('path/asset.scss', 'base');
@@ -80,21 +79,21 @@ class ScssAssetConverterTest extends TestCase
         $this->assertTrue($this->storage->exists('base/path/asset.css'));
     }
 
-    public function testConvertLeavesNonExistingFileAlone()
+    public function testConvertLeavesNonExistingFileAlone(): void
     {
         $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
         $result = $assetConverter->convert('nonexisting.scss', 'base/path');
         $this->assertEquals('nonexisting.scss', $result);
     }
 
-    public function testConvertHandlesScss()
+    public function testConvertHandlesScss(): void
     {
         $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
         $result = $assetConverter->convert('asset.scss', 'base/path');
         $this->assertEquals('asset.css', $result);
     }
 
-    public function testConvertActuallyWorks()
+    public function testConvertActuallyWorks(): void
     {
         $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
         $assetConverter->convert('asset.scss', 'base/path');
@@ -102,7 +101,7 @@ class ScssAssetConverterTest extends TestCase
         $this->assertEquals("#blop {\n  color: black; }\n", $generatedCss);
     }
 
-    public function testConvertHandlesImport()
+    public function testConvertHandlesImport(): void
     {
         // Unfortunately we cannot currently test this using the mocked
         // filesystem, since leafo/scss directly accesses the filesystem. If we
@@ -130,7 +129,7 @@ class ScssAssetConverterTest extends TestCase
         $storage->remove($targetFile);
     }
 
-    public function testConvertSkipsUpToDateResults()
+    public function testConvertSkipsUpToDateResults(): void
     {
         $this->storage->touch('base/path/already_converted.scss', 5);
         $this->storage->touch('base/path/already_converted.css', 6); // Newer
@@ -143,7 +142,7 @@ class ScssAssetConverterTest extends TestCase
         $this->assertEquals(6, $currentModificationTime, 'File modification time should not change');
     }
 
-    public function testConvertRespectsForceConvert()
+    public function testConvertRespectsForceConvert(): void
     {
         $this->storage->touch('base/path/already_converted.scss', 5);
         $this->storage->touch('base/path/already_converted.css', 6); // Newer
@@ -156,7 +155,7 @@ class ScssAssetConverterTest extends TestCase
         $this->assertGreaterThan(6, $currentModificationTime, 'The modification time has increased');
     }
 
-    public function testConvertWorksOnOutdatedResults()
+    public function testConvertWorksOnOutdatedResults(): void
     {
         $this->storage->touch('base/path/already_converted.scss', 5);
         $this->storage->touch('base/path/already_converted.css', 4); // Older
@@ -169,7 +168,7 @@ class ScssAssetConverterTest extends TestCase
         $this->assertGreaterThan(4, $currentModificationTime, 'The modification time has increased');
     }
 
-    public function testConvertWorksOnUnknownAgeResults()
+    public function testConvertWorksOnUnknownAgeResults(): void
     {
         $this->storage->touch('base/path/already_converted.scss', 5);
         $this->storage->touch('base/path/already_converted.css', 4); // Older
@@ -185,7 +184,7 @@ class ScssAssetConverterTest extends TestCase
         $this->assertGreaterThan(4, $currentModificationTime, 'The modification time has increased');
     }
 
-    public function testGetCssAssetIsOverridable()
+    public function testGetCssAssetIsOverridable(): void
     {
         $overridedConverter = new OverridedConverter(['storage' => $this->storage]);
         $overridedConverter->overridedCssAssetResult = 'overrided/file.ext';
@@ -195,7 +194,7 @@ class ScssAssetConverterTest extends TestCase
         $this->assertTrue($this->storage->exists('base/path/overrided/file.ext'));
     }
 
-    public function testAlbertBorsosUseCase()
+    public function testAlbertBorsosUseCase(): void
     {
         // More info: https://github.com/LucidTaZ/yii2-scssphp/pull/12
         $this->storage->put('base/path/scss/style.scss', "#blop { color: black; }");
