@@ -12,5 +12,13 @@ env:
 install:
   - composer update $COMPOSER_OPTIONS
 
+before_script:
+  - composer setup-integration
+
 script:
-  - composer ci
+  - composer stan
+  - composer unit
+  - composer integration
+
+after_script:
+  - composer teardown-integration

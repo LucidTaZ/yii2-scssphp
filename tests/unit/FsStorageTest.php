@@ -1,6 +1,6 @@
 <?php
 
-namespace lucidtaz\yii2scssphp\tests;
+namespace lucidtaz\yii2scssphp\tests\unit;
 
 use lucidtaz\yii2scssphp\storage\FsStorage;
 use PHPUnit\Framework\TestCase;
@@ -82,7 +82,7 @@ class FsStorageTest extends TestCase
     {
         $storage = new FsStorage;
 
-        $mtime = '123';
+        $mtime = 123;
         $success = touch($this->scratchFilename, $mtime);
         $this->assertTrue($success, 'Test precondition');
 

@@ -13,7 +13,11 @@ class FsStorage implements Storage
 
     public function get(string $filename): string
     {
-        return file_get_contents($filename);
+        $contents = file_get_contents($filename);
+        if ($contents === false) {
+            throw new RuntimeException('Could not read ' . $filename);
+        }
+        return $contents;
     }
 
     public function put(string $filename, string $contents): bool

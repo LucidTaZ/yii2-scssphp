@@ -1,0 +1,10 @@
+includes:
+  - vendor/phpstan/phpstan-phpunit/extension.neon
+parameters:
+  ignoreErrors:
+    # phpstan-phpunit 0.9 doesn't cope yet with knowing the type after an
+    # ->assertInstanceOf() call. Version 0.10 does, so these ignores can go away
+    # again. After upgrading. However, that needs PHPUnit >=7, which required
+    # PHP >= 7.1. So it depends on when we want to drop support for PHP 7.0
+    - '#Access to an undefined property object::\$forceConvert.#'
+    - '#Access to an undefined property object::\$compiler.#'

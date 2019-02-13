@@ -13,16 +13,6 @@ use yii\web\AssetConverterInterface;
 class ScssAssetConverter extends Component implements AssetConverterInterface
 {
     /**
-     * Formatter types for format of outputs CSS as a string.
-     */
-    const FORMAT_COMPACT       = \Leafo\ScssPhp\Formatter\Compact::class;
-    const FORMAT_COMPRESSED    = \Leafo\ScssPhp\Formatter\Compressed::class;
-    const FORMAT_CRUNCHED      = \Leafo\ScssPhp\Formatter\Crunched::class;
-    const FORMAT_DEBUG         = \Leafo\ScssPhp\Formatter\Debug::class;
-    const FORMAT_EXPANDED      = \Leafo\ScssPhp\Formatter\Expanded::class;
-    const FORMAT_NESTED        = \Leafo\ScssPhp\Formatter\Nested::class;
-
-    /**
      * @var Storage
      */
     public $storage;
@@ -35,16 +25,11 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
      * significantly degrade the performance.
      */
     public $forceConvert = false;
-    
-    /**
-     * @var string|\Leafo\ScssPhp\Formatter
-     */
-    public $formatter = \Leafo\ScssPhp\Formatter\Nested::class;
-    
+
     /**
      * @var Compiler SCSSPHP Compiler object which does the actual work
      */
-    private $compiler;
+    public $compiler;
 
     public function init()
     {
@@ -52,11 +37,11 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
         if (!isset($this->storage)) {
             $this->storage = new FsStorage;
         }
-        
-        /** @var Compiler $compiler */
-        $compiler = Yii::createObject(Compiler::class);
-        $compiler->setFormatter((string) $this->formatter);
-        $this->compiler = $compiler;
+        if (!isset($this->compiler)) {
+            /** @var Compiler $compiler */
+            $compiler = Yii::createObject(Compiler::class);
+            $this->compiler = $compiler;
+        }
     }
 
     /**
@@ -102,6 +87,7 @@ class ScssAssetConverter extends Component implements AssetConverterInterface
     protected function getCssAsset(string $filename, string $newExtension): string
     {
         $extensionlessFilename = pathinfo($filename, PATHINFO_FILENAME);
+        /** @var int $filenamePosition */
         $filenamePosition = strrpos($filename, $extensionlessFilename);
         $relativePath = substr($filename, 0, $filenamePosition);
         return "$relativePath$extensionlessFilename.$newExtension";

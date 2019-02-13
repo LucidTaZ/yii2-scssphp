@@ -8,11 +8,13 @@
     "require": {
         "php": ">=7.0.0",
         "yiisoft/yii2": "^2.0.13",
-        "leafo/scssphp": "^0.7.5"
+        "leafo/scssphp": "^0.7.5",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.2",
-        "phpstan/phpstan": "~0.9.0"
+        "phpstan/phpstan": "~0.9.0",
+        "phpstan/phpstan-phpunit": "~0.9.0"
     },
     "autoload": {
         "psr-4": { "lucidtaz\\yii2scssphp\\": "src/" }
@@ -33,11 +35,26 @@
         }
     ],
     "scripts": {
-        "test": "@php vendor/bin/phpunit",
-        "stan": "@php vendor/bin/phpstan analyse src tests --level=7 --autoload-file=vendor/yiisoft/yii2/Yii.php",
+        "unit": "@php vendor/bin/phpunit --testsuite Unit",
+        "setup-integration": [
+            "@teardown-integration",
+            "docker build -f docker/integration/Dockerfile -t yii2-scssphp-integration-test .",
+            "docker run -d --rm -p \"8080:8080\" --name yii2-scssphp-integration-test yii2-scssphp-integration-test",
+            "sleep 5"
+        ],
+        "integration": [
+            "@php vendor/bin/phpunit --testsuite Integration"
+        ],
+        "teardown-integration": [
+            "docker kill yii2-scssphp-integration-test || true"
+        ],
+        "stan": "@php vendor/bin/phpstan analyse -c phpstan.neon src tests --level=7 --autoload-file=vendor/yiisoft/yii2/Yii.php",
         "ci": [
-            "@test",
-            "@stan"
+            "@stan",
+            "@unit",
+            "@setup-integration",
+            "@integration",
+            "@teardown-integration"
         ]
     }
 }
