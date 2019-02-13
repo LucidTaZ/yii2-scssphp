@@ -10,12 +10,12 @@ class FsStorageTest extends TestCase
 {
     private $scratchFilename;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->scratchFilename = tempnam(sys_get_temp_dir(), 'lucidtaz_');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if (file_exists($this->scratchFilename)) {
             unlink($this->scratchFilename);
@@ -23,7 +23,7 @@ class FsStorageTest extends TestCase
         $this->scratchFilename = null;
     }
 
-    public function testExists()
+    public function testExists(): void
     {
         $storage = new FsStorage;
 
@@ -31,7 +31,7 @@ class FsStorageTest extends TestCase
         $this->assertFalse($storage->exists(sys_get_temp_dir() . '/lucidtaz_non_existing'));
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $storage = new FsStorage;
 
@@ -39,7 +39,7 @@ class FsStorageTest extends TestCase
         $this->assertEquals('contents', $storage->get($this->scratchFilename));
     }
 
-    public function testPut()
+    public function testPut(): void
     {
         $storage = new FsStorage;
 
@@ -51,7 +51,7 @@ class FsStorageTest extends TestCase
         $this->assertEquals('contents', $contents);
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $storage = new FsStorage;
 
@@ -67,7 +67,7 @@ class FsStorageTest extends TestCase
         $this->assertFalse($secondCallSuccess);
     }
 
-    public function testTouch()
+    public function testTouch(): void
     {
         $storage = new FsStorage;
 
@@ -78,7 +78,7 @@ class FsStorageTest extends TestCase
         $this->assertEquals($mtime, filemtime($this->scratchFilename));
     }
 
-    public function testGetMtime()
+    public function testGetMtime(): void
     {
         $storage = new FsStorage;
 
@@ -91,7 +91,7 @@ class FsStorageTest extends TestCase
         $this->assertEquals($mtime, $actual);
     }
 
-    public function testGetMtimeException()
+    public function testGetMtimeException(): void
     {
         $storage = new FsStorage;
 

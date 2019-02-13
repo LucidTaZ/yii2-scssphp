@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ability to customize the underlying SCSS Compiler via the `$compiler` attribute
 
 ### Removed
+- Support for PHP 7.0, following PHP's own support schedule
 - `$formatter` customization attribute
 
 ## [0.2.1] - 2018-04-22

@@ -1,9 +1,13 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 WORKDIR /project/integration-source
 
+# Workaround for tzdata asking for input
+# https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-certbot-in-a-docker-contai
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Prepare PHP installation
-RUN apt-get update && apt-get install --yes composer unzip php7.0-cli php7.0-mbstring php7.0-dom php7.0-curl
+RUN apt-get update && apt-get install --yes composer unzip php7.2-cli php7.2-mbstring php7.2-dom php7.2-curl
 
 # Install basic Yii application from upstream
 RUN composer create-project --no-interaction --prefer-dist yiisoft/yii2-app-basic .

@@ -44,7 +44,7 @@ class CorruptStorageDecorator implements Storage
         $this->storage = $storage;
     }
 
-    private function doThrow()
+    private function doThrow(): void
     {
         throw new RuntimeException('Intentional exception to simulate corruption');
     }
