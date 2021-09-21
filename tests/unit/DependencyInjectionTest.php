@@ -2,10 +2,10 @@
 
 namespace lucidtaz\yii2scssphp\tests\unit;
 
-use Leafo\ScssPhp\Compiler;
-use Leafo\ScssPhp\Formatter\Compressed;
 use lucidtaz\yii2scssphp\ScssAssetConverter;
 use PHPUnit\Framework\TestCase;
+use ScssPhp\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\Formatter\Compressed;
 use Yii;
 
 class DependencyInjectionTest extends TestCase

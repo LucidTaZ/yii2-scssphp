@@ -5,7 +5,7 @@
 # Yii2 bindings for SCSS-PHP
 
 This library provides easy integration of
-[leafo/scssphp](https://github.com/leafo/scssphp) into
+[scssPhp/scssphp](https://github.com/scssphp/scssphp) into
 [Yii2](https://github.com/yiisoft/yii2). Scssphp is a native PHP SCSS (SASS)
 compiler. This enables you to seamlessly use SCSS while using Yii's method of
 asset publication.
@@ -61,7 +61,7 @@ In other words; you can just use the `.scss` file(s) in the `$css` array.
 ## Customizing the SCSS parser
 
 The underlying library, yii2-scssphp, can be customized in case more flexibility
-is needed. To this end, properties of the `Leafo\ScssPhp\Compiler` object can be
+is needed. To this end, properties of the `ScssPhp\ScssPhp\Compiler` object can be
 overridden in the DI container, as follows:
 
 ```php

@@ -104,7 +104,7 @@ class ScssAssetConverterTest extends TestCase
     public function testConvertHandlesImport(): void
     {
         // Unfortunately we cannot currently test this using the mocked
-        // filesystem, since leafo/scss directly accesses the filesystem. If we
+        // filesystem, since scssphp directly accesses the filesystem. If we
         // want to mock it away, we should extend the compiler and override all
         // filesystem access, but it's not trivial.
         // For now we actually test directly on the filesystem, in the

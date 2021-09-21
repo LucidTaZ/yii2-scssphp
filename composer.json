@@ -1,6 +1,6 @@
 {
     "name": "lucidtaz/yii2-scssphp",
-    "description": "Yii2 bindings for leafo/scssphp",
+    "description": "Yii2 bindings for scssphp",
     "type": "library",
     "license": [
         "MIT"
