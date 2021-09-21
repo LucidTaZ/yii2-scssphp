@@ -98,13 +98,13 @@ class ScssAssetConverterTest extends TestCase
         $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
         $assetConverter->convert('asset.scss', 'base/path');
         $generatedCss = $this->storage->get('base/path/asset.css');
-        $this->assertEquals("#blop {\n  color: black; }\n", $generatedCss);
+        $this->assertEquals("#blop {\n  color: black;\n}\n", $generatedCss);
     }
 
     public function testConvertHandlesImport(): void
     {
         // Unfortunately we cannot currently test this using the mocked
-        // filesystem, since leafo/scss directly accesses the filesystem. If we
+        // filesystem, since scssphp directly accesses the filesystem. If we
         // want to mock it away, we should extend the compiler and override all
         // filesystem access, but it's not trivial.
         // For now we actually test directly on the filesystem, in the
@@ -123,7 +123,7 @@ class ScssAssetConverterTest extends TestCase
         $assetConverter = new ScssAssetConverter(['storage' => $storage]);
         $assetConverter->convert($sourceFilename, $baseDir);
         $generatedCss = $storage->get($targetFile);
-        $this->assertEquals("#blop {\n  color: blue; }\n\n#bla {\n  color: red; }\n", $generatedCss);
+        $this->assertEquals("#blop {\n  color: blue;\n}\n#bla {\n  color: red;\n}\n", $generatedCss);
 
         // Cleanup generated file
         $storage->remove($targetFile);

@@ -2,10 +2,10 @@
 
 namespace lucidtaz\yii2scssphp;
 
-use Leafo\ScssPhp\Compiler;
 use lucidtaz\yii2scssphp\storage\FsStorage;
 use lucidtaz\yii2scssphp\storage\Storage;
 use RuntimeException;
+use ScssPhp\ScssPhp\Compiler;
 use Yii;
 use yii\base\Component;
 use yii\web\AssetConverterInterface;

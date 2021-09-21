@@ -61,9 +61,9 @@ $config = [
     // START CUSTOMIZED TEST CODE
     'container' => [
         'definitions' => [
-            'Leafo\ScssPhp\Compiler' => function () {
-                $compiler = new Leafo\ScssPhp\Compiler();
-                $compiler->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
+            'ScssPhp\ScssPhp\Compiler' => function () {
+                $compiler = new ScssPhp\ScssPhp\Compiler();
+                $compiler->setFormatter('ScssPhp\ScssPhp\Formatter\Compressed');
                 return $compiler;
             },
         ],

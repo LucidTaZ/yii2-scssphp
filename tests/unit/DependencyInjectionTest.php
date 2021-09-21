@@ -2,10 +2,10 @@
 
 namespace lucidtaz\yii2scssphp\tests\unit;
 
-use Leafo\ScssPhp\Compiler;
-use Leafo\ScssPhp\Formatter\Compressed;
 use lucidtaz\yii2scssphp\ScssAssetConverter;
 use PHPUnit\Framework\TestCase;
+use ScssPhp\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\Formatter\Compressed;
 use Yii;
 
 class DependencyInjectionTest extends TestCase
@@ -42,7 +42,7 @@ class DependencyInjectionTest extends TestCase
     public function testThatCompilerCanBeCustomizedDirectly(): void
     {
         $input = "#blop { color: black; display: block; }";
-        $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block; }\n";
+        $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block;\n}\n";
         $expectedCustomizedOutput = "#blop{color:black;display:block}";
 
         $control = new Compiler();
@@ -66,7 +66,7 @@ class DependencyInjectionTest extends TestCase
     public function testThatCompilerCanBeCustomizedInContainer(): void
     {
         $input = "#blop { color: black; display: block; }";
-        $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block; }\n";
+        $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block;\n}\n";
         $expectedCustomizedOutput = "#blop{color:black;display:block}";
 
         $control = new Compiler();
@@ -92,7 +92,7 @@ class DependencyInjectionTest extends TestCase
     public function testThatOverriddenCompilerCanBeBoundInContainer(): void
     {
         $input = "#blop { color: black; display: block; }";
-        $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block; }\n";
+        $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block;\n}\n";
         $expectedCustomizedOutput = "Fixed Result";
 
         $control = new Compiler();

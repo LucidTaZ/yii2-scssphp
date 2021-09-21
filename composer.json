@@ -1,6 +1,6 @@
 {
     "name": "lucidtaz/yii2-scssphp",
-    "description": "Yii2 bindings for leafo/scssphp",
+    "description": "Yii2 bindings for scssphp",
     "type": "library",
     "license": [
         "MIT"
@@ -8,7 +8,7 @@
     "require": {
         "php": ">=7.1.0",
         "yiisoft/yii2": "^2.0.13",
-        "leafo/scssphp": "^0.7.5",
+        "scssphp/scssphp": "^1.0",
         "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
