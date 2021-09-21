@@ -98,7 +98,7 @@ class ScssAssetConverterTest extends TestCase
         $assetConverter = new ScssAssetConverter(['storage' => $this->storage]);
         $assetConverter->convert('asset.scss', 'base/path');
         $generatedCss = $this->storage->get('base/path/asset.css');
-        $this->assertEquals("#blop {\n  color: black; }\n", $generatedCss);
+        $this->assertEquals("#blop {\n  color: black;\n}\n", $generatedCss);
     }
 
     public function testConvertHandlesImport(): void
@@ -123,7 +123,7 @@ class ScssAssetConverterTest extends TestCase
         $assetConverter = new ScssAssetConverter(['storage' => $storage]);
         $assetConverter->convert($sourceFilename, $baseDir);
         $generatedCss = $storage->get($targetFile);
-        $this->assertEquals("#blop {\n  color: blue; }\n\n#bla {\n  color: red; }\n", $generatedCss);
+        $this->assertEquals("#blop {\n  color: blue;\n}\n\n#bla {\n  color: red;\n}\n", $generatedCss);
 
         // Cleanup generated file
         $storage->remove($targetFile);

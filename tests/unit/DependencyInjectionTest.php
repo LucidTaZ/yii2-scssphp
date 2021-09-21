@@ -42,7 +42,7 @@ class DependencyInjectionTest extends TestCase
     public function testThatCompilerCanBeCustomizedDirectly(): void
     {
         $input = "#blop { color: black; display: block; }";
-        $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block; }\n";
+        $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block;\n}\n";
         $expectedCustomizedOutput = "#blop{color:black;display:block}";
 
         $control = new Compiler();
@@ -66,7 +66,7 @@ class DependencyInjectionTest extends TestCase
     public function testThatCompilerCanBeCustomizedInContainer(): void
     {
         $input = "#blop { color: black; display: block; }";
-        $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block; }\n";
+        $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block;\n}\n";
         $expectedCustomizedOutput = "#blop{color:black;display:block}";
 
         $control = new Compiler();
@@ -92,7 +92,7 @@ class DependencyInjectionTest extends TestCase
     public function testThatOverriddenCompilerCanBeBoundInContainer(): void
     {
         $input = "#blop { color: black; display: block; }";
-        $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block; }\n";
+        $expectedDefaultOutput = "#blop {\n  color: black;\n  display: block;\n}\n";
         $expectedCustomizedOutput = "Fixed Result";
 
         $control = new Compiler();
