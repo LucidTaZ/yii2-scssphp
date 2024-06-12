@@ -79,15 +79,13 @@ $config = [
     ],
     'container' => [
         'definitions' => [
-            'Leafo\ScssPhp\Compiler' => function () {
+            \ScssPhp\ScssPhp\Compiler::class => function () {
                 // You can also use a child class here:
-                $compiler = new Leafo\ScssPhp\Compiler();
-
-                // Customize the object, for example set a formatter:
-                $compiler->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
+                $compiler = new \ScssPhp\ScssPhp\Compiler();
+                $compiler->setOutputStyle(\ScssPhp\ScssPhp\OutputStyle::COMPRESSED);
 
                 return $compiler;
-            },
+            }
         ],
     ],
 
